@@ -203,7 +203,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
                   value={formData.username}
                   onChange={handleInputChange}
                   autoComplete="name"
-                  placeholder="e.g. ritik_dev"
+                  placeholder="e.g. tipu_dev"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -227,7 +227,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                     autoComplete="email"
-                    placeholder="ritik@example.com"
+                    placeholder="tipu@example.com"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
