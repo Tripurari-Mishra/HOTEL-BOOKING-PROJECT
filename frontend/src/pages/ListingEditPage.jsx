@@ -12,8 +12,8 @@ import {
   Select,
   InputAdornment,
 } from "@mui/material";
-// 🔥 FIX: Naye responsive standard ke liye modern Grid2 component use kiya hai
-import Grid from "@mui/material/Grid2";
+// 🔥 FIX: Naye responsive standard ke liye modern Grid component use kiya hai
+import Grid from '@mui/material/Grid';
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import TitleIcon from "@mui/icons-material/Title";
@@ -205,7 +205,7 @@ export const ListingEditPage = () => {
 
         {/* Form Container */}
         <Box component="form" onSubmit={handleSubmit} noValidate>
-          {/* 🔥 Grid layout properties updated to modern Grid2 sizing */}
+          {/* 🔥 Grid layout properties updated to modern Grid sizing */}
           <Grid container spacing={3}>
             {/* 1. Title */}
             <Grid size={{ xs: 12 }}>

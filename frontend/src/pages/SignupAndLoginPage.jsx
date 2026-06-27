@@ -10,8 +10,8 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-// 🔥 FIX: Naye responsive standard ke liye Grid2 standard module use kiya hai
-import Grid from "@mui/material/Grid2";
+// 🔥 FIX: Naye responsive standard ke liye Grid standard module use kiya hai
+import Grid from "@mui/material/Grid";
 
 import { PersonOutlined } from "@mui/icons-material";
 import { EmailOutlined } from "@mui/icons-material";
@@ -190,7 +190,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
             noValidate
             sx={{ mt: 1 }}
           >
-            {/* 🔥 Responsive Grid2 System with Size Props */}
+            {/* 🔥 Responsive Grid System with Size Props */}
             <Grid container spacing={2}>
               {/* Username Field */}
               <Grid size={{ xs: 12 }}>
