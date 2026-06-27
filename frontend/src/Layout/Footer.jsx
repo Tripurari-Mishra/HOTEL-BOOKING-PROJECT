@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  Link,
-  IconButton,
-} from "@mui/material";
+import { Box, Container, Typography, Link, IconButton } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -19,22 +12,23 @@ function Footer() {
         backgroundColor: "#f7f7f7",
         color: "#222222",
         borderTop: "1px solid #dddddd",
-        padding: "48px 0 24px 0", // Upar zyada padding di hai taaki columns khule-khule lagein
+        padding: { xs: "32px 0 24px 0", sm: "48px 0 24px 0" }, // Mobile par padding thodi kam kar di
         marginTop: "60px",
       }}
     >
       <Container>
-        {/* 🧱 BLOCK 1: Multi-Column Section (Direct CSS Grid Use Kiya For Layout) */}
+        {/* 🧱 BLOCK 1: Multi-Column Section */}
         <Box
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "1fr", // Mobile par ek column
+              xs: "1fr", // Mobile par ek single column
               sm: "repeat(2, 1fr)", // Tablet par do columns
-              md: "repeat(3, 1fr)", // Laptop par teen columns
+              md: "repeat(3, 1fr)", // Desktop par teen columns
             },
             gap: "40px",
             marginBottom: "40px",
+            textAlign: { xs: "center", sm: "left" }, // 📱 Mobile par columns ka text center alignment de diya
           }}
         >
           {/* Column 1: Support */}
@@ -48,28 +42,44 @@ function Footer() {
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Help Centre
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               AirCover
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Anti-discrimination
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Disability support
             </Link>
@@ -86,21 +96,33 @@ function Footer() {
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               stayNest.org: disaster relief
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Combating urbanization
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Report neighborhood concern
             </Link>
@@ -117,28 +139,44 @@ function Footer() {
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Newsroom
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               New features
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Careers
             </Link>
             <Link
               href="#"
               underline="hover"
-              sx={{ color: "#717171", fontSize: "14px" }}
+              sx={{
+                color: "#717171",
+                fontSize: "14px",
+                "&:hover": { color: "#222" },
+              }}
             >
               Investors
             </Link>
@@ -152,7 +190,7 @@ function Footer() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
+            flexDirection: { xs: "column-reverse", sm: "row" }, // 📱 Mobile par icons upar aur copyright text automatically neeche ho jayega
             justifyContent: "space-between",
             alignItems: "center",
             gap: 2,
@@ -161,29 +199,45 @@ function Footer() {
           {/* Copyright text */}
           <Typography
             variant="body2"
-            sx={{ color: "#222", textAlign: { xs: "center", sm: "left" } }}
+            sx={{
+              color: "#717171",
+              textAlign: { xs: "center", sm: "left" },
+              fontSize: "14px",
+            }}
           >
             © {new Date().getFullYear()} stayNest, Inc. · Privacy · Terms ·
             Sitemap
           </Typography>
 
-          {/* Social Icons (MUI IconButton ka use kiya hai click effect ke liye) */}
+          {/* Social Icons */}
           <Box sx={{ display: "flex", gap: 1 }}>
             <IconButton
               href="#"
-              sx={{ color: "#222", "&:hover": { color: "#FF385C" } }}
+              sx={{
+                color: "#222",
+                "&:hover": { color: "#FF385C" },
+                padding: "4px",
+              }}
             >
               <FacebookIcon />
             </IconButton>
             <IconButton
               href="#"
-              sx={{ color: "#222", "&:hover": { color: "#FF385C" } }}
+              sx={{
+                color: "#222",
+                "&:hover": { color: "#FF385C" },
+                padding: "4px",
+              }}
             >
               <TwitterIcon />
             </IconButton>
             <IconButton
               href="#"
-              sx={{ color: "#222", "&:hover": { color: "#FF385C" } }}
+              sx={{
+                color: "#222",
+                "&:hover": { color: "#FF385C" },
+                padding: "4px",
+              }}
             >
               <InstagramIcon />
             </IconButton>
