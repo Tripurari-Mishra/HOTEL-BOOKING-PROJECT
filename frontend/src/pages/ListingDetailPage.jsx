@@ -24,7 +24,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { deleteListing, getListingDetails } from "../api/listings";
 import { createReviews, deleteReviews, updateReviews } from "../api/review";
 import { toast } from "react-toastify";
-import { checkoutApi, verifyPaymentApi } from "../api/booking"; // 👈 Dono naye payment functions import ho gaye
+import { checkoutApi, verifyPaymentApi } from "../api/booking";
 
 export const ListingDetailPage = () => {
   const [listing, setListing] = useState({});
@@ -102,23 +102,19 @@ export const ListingDetailPage = () => {
     try {
       setLoadingBooking(true);
 
-      // 1. Backend se Razorpay Order ID generate karwao
       const orderData = await checkoutApi(totalPrice);
       if (!orderData.success) {
         toast.error("Order create karne mein dikkat aayi bhai!");
         return;
       }
 
-      // const { order } = orderData;
       const order = orderData.order || orderData.data || orderData;
 
       if (!order || !order.id) {
         toast.error("Backend se Order ID sahi se nahi mili bhai!");
-        console.log("Backend Response Data:", orderData); // Yeh console me dekhna kya aa raha hai
         return;
       }
 
-      // 2. Razorpay Pop-up Options config
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
@@ -127,17 +123,15 @@ export const ListingDetailPage = () => {
         description: "Hotel Booking Payment",
         order_id: order.id,
 
-        // Jab user popup me payment success kar dega, tab ye handler hit karega
         handler: async function (response) {
           try {
             const bookingInfo = {
-              listing: id, // 👈 Agar backend Schema me 'listing' likha hai, toh id yahan pass karo
+              listing: id,
               checkIn: checkIn,
               checkOut: checkOut,
               totalPrice: totalPrice,
             };
 
-            // 3. Backend par verification signature aur booking payload bhejo
             const verifyData = await verifyPaymentApi({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
@@ -163,11 +157,10 @@ export const ListingDetailPage = () => {
           email: currUser?.email || "guest@example.com",
         },
         theme: {
-          color: "#FF385C", // Premium theme design matching color
+          color: "#FF385C",
         },
       };
 
-      // 3. Razorpay Popup box browser screen pe render karo
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
@@ -271,43 +264,64 @@ export const ListingDetailPage = () => {
   };
 
   return (
-    <Container sx={{ marginTop: "32px", marginBottom: "60px" }}>
+    <Container
+      sx={{ marginTop: { xs: "16px", sm: "32px" }, marginBottom: "60px" }}
+    >
       {/* 🏷️ SECTION 1: Title & Quick Info */}
       <Box sx={{ marginBottom: "24px" }}>
         <Typography
           variant="h4"
-          sx={{ fontWeight: "600", color: "#222222", marginBottom: "8px" }}
+          sx={{
+            fontWeight: "600",
+            color: "#222222",
+            marginBottom: "12px",
+            fontSize: { xs: "1.75rem", sm: "2.125rem" }, // Mobile par text size chota hoga taaki wrap badiya ho
+          }}
         >
           {listing.title || dummyListing.title}
         </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Rating
-            value={Number(listing.rating || dummyListing.rating)}
-            precision={0.05}
-            readOnly
-            size="small"
-          />
-          <Typography
-            variant="body2"
-            sx={{ fontWeight: "600", color: "#222222" }}
-          >
-            {listing.rating || dummyListing.rating} ·
-          </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: { xs: "flex-start", sm: "center" },
+            flexDirection: { xs: "column", sm: "row" }, // Mobile par details vertical stacked hongi
+            gap: { xs: 1, sm: 0.5 },
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <Rating
+              value={Number(listing.rating || dummyListing.rating)}
+              precision={0.05}
+              readOnly
+              size="small"
+            />
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: "600", color: "#222222" }}
+            >
+              {listing.rating || dummyListing.rating} ·
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#717171",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+            >
+              {listing.review?.length || 0} reviews
+            </Typography>
+          </Box>
           <Typography
             variant="body2"
             sx={{
               color: "#717171",
-              textDecoration: "underline",
-              cursor: "pointer",
+              fontWeight: "600",
+              marginLeft: { xs: "0px", sm: "8px" },
             }}
           >
-            {listing.review?.length || 0} reviews
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "#717171", fontWeight: "600", marginLeft: "8px" }}
-          >
-            · {listing.location || dummyListing.location},{" "}
+            {window.innerWidth < 600 ? "" : "·"}{" "}
+            {listing.location || dummyListing.location},{" "}
             {listing.country || dummyListing.country}
           </Typography>
         </Box>
@@ -320,7 +334,7 @@ export const ListingDetailPage = () => {
         alt={listing.title || dummyListing.title}
         sx={{
           width: "100%",
-          height: { xs: "300px", sm: "450px", md: "500px" },
+          height: { xs: "240px", sm: "400px", md: "500px" }, // Fluid image height matching screens
           borderRadius: "16px",
           objectFit: "cover",
           marginBottom: "32px",
@@ -331,8 +345,8 @@ export const ListingDetailPage = () => {
       <Box
         sx={{
           display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" },
-          gap: "64px",
+          gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" }, // Responsive Split grid block
+          gap: { xs: "32px", md: "64px" },
         }}
       >
         {/* ⬅️ LEFT SIDE */}
@@ -344,12 +358,17 @@ export const ListingDetailPage = () => {
               alignItems: "center",
               justifyContent: "space-between",
               marginBottom: "24px",
+              gap: 2,
             }}
           >
             <Box>
               <Typography
                 variant="h6"
-                sx={{ fontWeight: "600", color: "#222" }}
+                sx={{
+                  fontWeight: "600",
+                  color: "#222",
+                  fontSize: { xs: "1.1rem", sm: "1.25rem" },
+                }}
               >
                 Entire {listing.category || dummyListing.category} hosted by{" "}
                 {dummyListing.hostName}
@@ -358,7 +377,14 @@ export const ListingDetailPage = () => {
                 14 guests · 4 bedrooms · 4 beds · 4 bathrooms
               </Typography>
             </Box>
-            <Avatar sx={{ width: 56, height: 56, backgroundColor: "#FF385C" }}>
+            <Avatar
+              sx={{
+                width: 56,
+                height: 56,
+                backgroundColor: "#FF385C",
+                flexShrink: 0,
+              }}
+            >
               {dummyListing.hostName[0]}
             </Avatar>
           </Box>
@@ -382,7 +408,13 @@ export const ListingDetailPage = () => {
           >
             What this place offers
           </Typography>
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+              gap: 2,
+            }}
+          >
             <Box
               sx={{
                 display: "flex",
@@ -436,7 +468,14 @@ export const ListingDetailPage = () => {
           listing &&
           (currUser._id === listing.owner?._id ||
             listing.owner === currUser._id) ? (
-            <Box sx={{ display: "flex", gap: "16px", marginTop: "24px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "16px",
+                marginTop: "24px",
+              }}
+            >
               <Button
                 variant="outlined"
                 startIcon={<EditIcon />}
@@ -448,6 +487,7 @@ export const ListingDetailPage = () => {
                   fontWeight: "600",
                   padding: "8px 24px",
                   borderRadius: "8px",
+                  flex: { xs: 1, sm: "initial" }, // Mobile par side by side buttons complete display stretch
                 }}
               >
                 Edit Listing
@@ -464,6 +504,7 @@ export const ListingDetailPage = () => {
                   fontWeight: "600",
                   padding: "8px 24px",
                   borderRadius: "8px",
+                  flex: { xs: 1, sm: "initial" },
                 }}
               >
                 Delete Listing
@@ -482,7 +523,7 @@ export const ListingDetailPage = () => {
             component="form"
             onSubmit={handleReviewSubmit}
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 }, // Responsive inside padding
               border: "1px solid #e0e0e0",
               borderRadius: "12px",
               backgroundColor: "#fafafa",
@@ -500,14 +541,16 @@ export const ListingDetailPage = () => {
                 Rating
               </Typography>
               <Paper elevation={0} sx={{ backgroundColor: "transparent" }}>
-                <Rating
-                  name="rating"
-                  value={Number(reviewData.rating)}
-                  onChange={(event, newValue) => {
-                    setReviewData({ ...reviewData, rating: newValue });
-                  }}
-                  size="large"
-                />
+                <Paper elevation={0} sx={{ backgroundColor: "transparent" }}>
+                  <Rating
+                    name="rating"
+                    value={Number(reviewData.rating)}
+                    onChange={(event, newValue) => {
+                      setReviewData({ ...reviewData, rating: newValue });
+                    }}
+                    size="large"
+                  />
+                </Paper>
               </Paper>
             </Box>
 
@@ -531,6 +574,7 @@ export const ListingDetailPage = () => {
                   color: "#fff",
                   fontWeight: "600",
                   textTransform: "none",
+                  flex: { xs: 1, sm: "initial" },
                   "&:hover": {
                     backgroundColor: isEditingReview ? "#45a049" : "#DC143C",
                   },
@@ -548,7 +592,11 @@ export const ListingDetailPage = () => {
                     setEditingReviewId(null);
                     setReviewData({ comment: "", rating: 5 });
                   }}
-                  sx={{ textTransform: "none", fontWeight: "600" }}
+                  sx={{
+                    textTransform: "none",
+                    fontWeight: "600",
+                    flex: { xs: 1, sm: "initial" },
+                  }}
                 >
                   Cancel
                 </Button>
@@ -558,14 +606,16 @@ export const ListingDetailPage = () => {
         </Box>
 
         {/* ➡️ RIGHT SIDE: Floating Booking Widget */}
-        <Box>
+        <Box sx={{ order: { xs: -1, md: 1 } }}>
+          {" "}
+          {/* 🔥 Mobile screens par reservation widget pehle top pe aayega */}
           <Paper
             elevation={4}
             sx={{
               padding: "24px",
               borderRadius: "16px",
               border: "1px solid #dddddd",
-              position: "sticky",
+              position: { xs: "static", md: "sticky" }, // Mobile par layout control scroll natural rahega
               top: "24px",
             }}
           >
@@ -668,7 +718,6 @@ export const ListingDetailPage = () => {
               </Box>
             </Box>
 
-            {/* 🔴 YEH BUTTON DIRECT APNE INLINE INTEGRATED FUNCTION KO HIT KAREGA */}
             <Button
               variant="contained"
               fullWidth
@@ -714,6 +763,8 @@ export const ListingDetailPage = () => {
           {listing.review &&
             listing.review.map((rev) => (
               <Grid item xs={12} sm={6} key={rev._id}>
+                {" "}
+                {/* Standard Grid display systems for all layout platforms */}
                 <Card
                   variant="outlined"
                   sx={{

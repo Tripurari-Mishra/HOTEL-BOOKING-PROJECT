@@ -7,10 +7,11 @@ import {
   Button,
   Typography,
   Paper,
-  Grid,
   InputAdornment,
   IconButton,
 } from "@mui/material";
+// 🔥 FIX: Naye responsive standard ke liye Grid2 standard module use kiya hai
+import Grid from "@mui/material/Grid2";
 
 import { PersonOutlined } from "@mui/icons-material";
 import { EmailOutlined } from "@mui/icons-material";
@@ -49,7 +50,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
     evt.preventDefault();
     if (loading) return;
 
-    // Validation for login page
+    // Validation
     if (isLoginPage) {
       if (!formData.username || !formData.password) {
         toast.error("Required username or password");
@@ -57,15 +58,12 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
       }
     } else {
       if (!formData.username || !formData.password || !formData.email) {
-        toast.error("Required email or signup");
+        toast.error("Required email, username, and password");
         return;
       }
     }
 
-    // Validation for signup page
-
     setLoading(true);
-    // login page
     try {
       if (isLoginPage) {
         let { username, password } = formData;
@@ -76,8 +74,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
           return;
         }
 
-        console.log("username: ", username, "password: ", password);
-        toast.success("User is Login successfully");
+        toast.success("User is Logged in successfully");
         setCurrUser(res.user);
         setLoading(false);
         setTimeout(() => navigate(-1), 2000);
@@ -91,7 +88,6 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
           return;
         }
 
-        console.log(`username ${formData.username}`);
         toast.success("Welcome! Account created and logged in automatically.");
         setCurrUser(res?.user || { username: formData.username });
         setLoading(false);
@@ -103,7 +99,6 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
         error.response?.data?.message ||
         "Something went wrong! Please try again.";
       toast.error(errMsg);
-
       setLoading(false);
     }
   };
@@ -116,17 +111,21 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
         alignItems: "center",
         justifyContent: "center",
         background: "linear-gradient(to bottom, #fff5f5, #ffffff)",
-        py: 4,
+        py: { xs: 2, sm: 4 }, // Mobile par behtar spacing ke liye dynamic padding
+        px: 2,
       }}
     >
-      <Container maxWidth="sm">
+      <Container maxWidth="xs" sx={{ p: 0 }}>
+        {" "}
+        {/* Form layout tight and secure rakhne ke liye maxWidth="xs" */}
         <Paper
           elevation={6}
           sx={{
-            p: { xs: 3, md: 5 },
+            p: { xs: 3, sm: 4, md: 5 }, // Alag-alag screen sizes par automatic adaptive card padding
             borderRadius: 4,
             boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.05)",
             border: "1px solid #f0f0f0",
+            width: "100%",
           }}
         >
           {/* Top Icon & Heading */}
@@ -142,7 +141,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
               sx={{
                 p: 2,
                 borderRadius: "50%",
-                bgcolor: "#FF385C", // Asli Airbnb Pink-Red
+                bgcolor: "#FF385C",
                 color: "white",
                 mb: 2,
                 display: "inline-flex",
@@ -158,11 +157,12 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
 
             <Typography
               component="h1"
-              variant="h4"
+              variant="h5" // Mobile screens par h4 bohot badi lagti hai, variant="h5" + font scale perfect dikhega
               sx={{
                 fontWeight: 700,
                 color: "#222222",
                 letterSpacing: "-0.5px",
+                fontSize: { xs: "1.5rem", sm: "1.75rem" },
               }}
             >
               {isLoginPage ? "Welcome Back" : "Create Account"}
@@ -170,7 +170,12 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
 
             <Typography
               variant="body2"
-              sx={{ color: "#717171", mt: 1, textAlign: "center" }}
+              sx={{
+                color: "#717171",
+                mt: 1,
+                textAlign: "center",
+                px: { xs: 1, sm: 0 },
+              }}
             >
               {isLoginPage
                 ? "Enter your credentials to access your account"
@@ -185,10 +190,10 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
             noValidate
             sx={{ mt: 1 }}
           >
+            {/* 🔥 Responsive Grid2 System with Size Props */}
             <Grid container spacing={2}>
-              {/* Dynamic Name Field (Only for Signup) */}
-
-              <Grid item xs={12}>
+              {/* Username Field */}
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   required
                   fullWidth
@@ -198,7 +203,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
                   value={formData.username}
                   onChange={handleInputChange}
                   autoComplete="name"
-                  placeholder="e.g. tipu_dev"
+                  placeholder="e.g. ritik_dev"
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -210,10 +215,9 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
                 />
               </Grid>
 
-              {/* Email Field */}
-
+              {/* Email Field (Only for Signup) */}
               {!isLoginPage && (
-                <Grid item xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <TextField
                     required
                     fullWidth
@@ -223,7 +227,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                     autoComplete="email"
-                    placeholder="tipu@example.com"
+                    placeholder="ritik@example.com"
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -237,7 +241,7 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
               )}
 
               {/* Password Field */}
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <TextField
                   required
                   fullWidth
@@ -304,14 +308,19 @@ export const SignUpAndLogin = ({ setCurrUser }) => {
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Typography
                 variant="body2"
-                sx={{ color: "#717171", display: "flex", alignItems: "center" }}
+                sx={{
+                  color: "#717171",
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
               >
                 {isLoginPage
                   ? "Don't have an account?"
                   : "Already have an account?"}
                 <Button
                   onClick={() => {
-                    // Route change hone par form ke fields reset ho jayenge
                     setFormData({ username: "", email: "", password: "" });
                     navigate(isLoginPage ? "/signup" : "/login");
                   }}
