@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import reviewSchemaValidator from "../validators/reviewValidators.js";
-import { Review } from "../Models/Review.js";
+import { Review } from "../Schema/Review.js";
 import { wrapAsync } from "../utils/wrapAsync.js";
 
 export const reviewValidate = (req, res, next) => {

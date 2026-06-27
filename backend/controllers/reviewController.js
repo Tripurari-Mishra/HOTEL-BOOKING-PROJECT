@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { Listing } from "../Models/Listing.js";
-import { Review } from "../Models/Review.js";
+import { Listing } from "../Schema/Listing.js";
+import { Review } from "../Schema/Review.js";
 import { wrapAsync } from "../utils/wrapAsync.js";
 
 export const createReviews = wrapAsync(async (req, res) => {

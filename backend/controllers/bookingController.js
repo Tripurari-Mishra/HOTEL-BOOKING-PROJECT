@@ -1,5 +1,5 @@
-import { Booking } from "../models/Booking.js";
-import { Listing } from "../models/Listing.js";
+import { Booking } from "../Schema/Booking.js";
+import { Listing } from "../Schema/Listing.js";
 import { wrapAsync } from "../utils/wrapAsync.js";
 import { StatusCodes } from "http-status-codes";
 import Razorpay from "razorpay";
