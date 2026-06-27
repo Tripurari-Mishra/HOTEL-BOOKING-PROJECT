@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
 });
-
 export const getAllListings = async (searchQuery = "") => {
   try {
     const url = searchQuery ? `listings?search=${searchQuery}` : "listings";
